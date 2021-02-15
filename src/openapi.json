@@ -1,0 +1,135 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CS 4783 Project",
+    "description": "A Web Service project for Docrob's CS 4783 class.",
+    "contact": {
+      "name": "Martin De La Torre",
+      "email": "funnygeeks101@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "{basePath}:{port}",
+      "description": "Development server",
+      "variables": {
+        "port": {
+          "enum": [
+            "5000",
+            "8080",
+            "12250",
+            "8000"
+          ],
+          "default": "5000",
+          "description": "The default is port 5000 because that is the default port used by Flask in Python."
+        },
+        "basePath": {
+          "enum": [
+            "http://localhost",
+            "http://127.0.0.1"
+          ],
+          "default": "http://localhost"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/hello": {
+      "description": "A sample endpoint to test the server.",
+      "get": {
+        "parameters": [
+        ],
+        "description": "The proverbial hello world minus the world. It's a test endpoint to make sure that a connection can be made to the server. If you can run the hello endpoint but can't run other endpoints, it is definitely a server side problem.\n\n(NOTE FOR THE GRADER: Assignment 1 only requires /hello and /swagger.json to work, so even though the other endpoints aren't working, it's ok. It's supposed to be like that for assignment 1.)",
+        "responses": {
+          "200": {
+            "description": "Hello response to caller",
+            "content": {
+              "application/json": {
+                "example": {"message": "hello yourself"}
+              }
+            }
+          },
+          "default": {
+            "description": "Unknown error."
+          }
+        }
+      }
+    },
+    "/swagger.json": {
+      "description": "Endpoint for the open api specification file. (the swagger file)",
+      "get": {
+        "parameters": [
+        ],
+        "description": "reading the open api specification file. (the swagger file)",
+        "responses": {
+          "200": {
+            "description": "response with the swagger JSON file. It's weird how the example is going to be the entire file I'm writing now. It's a self reference. I'm not putting an example because I don't want to worry about resolving references.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "default": {
+            "description": "Unknown error."
+          }
+        }
+      }
+    },
+    "/properties": {
+      "description": "An endpoint to retrieve a list of real estate properties",
+      "get": {
+        "parameters": [
+        ],
+        "description": "Returns a list of stored US properties (id, address, and zip) ordered by id",
+        "responses": {
+          "200": {
+            "description": "successful return of list of addresses.",
+            "content": {
+              "application/json": {
+                "example": [{"id":1,"address":"501 Test Ave.","zip":"78222"},
+                            {"id":2,"address":"123 Main Street","zip":"78222"}]
+              }
+            }
+          },
+          "default": {
+            "description": "Unknown error."
+          }
+        }
+      },
+      "post": {
+        "description": "Add a real estate property. Address must be between 1 and 255 chars. City must be between 1 and 50 chars. State must be exactly 2 chars. Zip must be between 5 and 10 chars. All fields are required. The system will auto-assign a unique id to the new property.",
+        "parameters": [
+        ],
+        "requestBody": {
+          "description": "The JSON with the real estate property you want to add.",
+          "content": {
+            "application/json": {
+              "example": {"address":"<string>","city":"<string>","state":"<string>","zip":"<string>"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful posting of a real estate address.",
+            "content": {
+              "application/json": {
+                "example": [{"message":"added","id":"<generated id for property>"}]
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid JSON, failed to POST.",
+            "content": {
+              "application/json": {
+                "example": [{"message":"address is not between 1 and 255 characters"}, {"message":"state is not 2 characters"}]
+              }
+            }
+          },
+          "default": {
+            "description": "Unknown error."
+          }
+        }
+      }
+    }
+  }
+}
